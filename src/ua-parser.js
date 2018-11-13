@@ -16,6 +16,7 @@
     /////////////
 
 
+    // 定义常量
     var LIBVERSION  = '0.7.19',
         EMPTY       = '',
         UNKNOWN     = '?',
@@ -44,6 +45,13 @@
 
 
     var util = {
+        /**
+         * 对extensions数组（正则）进行扩展
+         *
+         * @param {object} regexes
+         * @param {array} extensions
+         * @returns {object}
+         */
         extend : function (regexes, extensions) {
             var margedRegexes = {};
             for (var i in regexes) {
@@ -55,6 +63,15 @@
             }
             return margedRegexes;
         },
+
+
+        /**
+         * 判断字符串str1是否是str2的子串
+         *
+         * @param {string} str1
+         * @param {string} str2
+         * @returns {boolean}
+         */
         has : function (str1, str2) {
           if (typeof str1 === "string") {
             return str2.toLowerCase().indexOf(str1.toLowerCase()) !== -1;
@@ -62,12 +79,35 @@
             return false;
           }
         },
+
+
+        /**
+         * 字符串转小写
+         *
+         * @param {string} str
+         * @returns {string}
+         */
         lowerize : function (str) {
             return str.toLowerCase();
         },
+
+        /**
+         * 获取版本号
+         *
+         * @param {string} version
+         * @returns {string}
+         */
         major : function (version) {
             return typeof(version) === STR_TYPE ? version.replace(/[^\d\.]/g,'').split(".")[0] : undefined;
         },
+
+        /**
+         * 对trim作兼容处理，去掉字符串两端的空格
+         * 某些软件，在保存一个以UTF-8编码的文件时，会在文件开始的地方插入三个不可见的字符（0xEF 0xBB 0xBF，即BOM），转码后是“\uFEFF”，因此我们在读取时需要自己去掉这些字符。“\xA0”其实就是HTML中常见的“&nbsp”
+         *
+         * @param {*} str
+         * @returns {string}
+         */
         trim : function (str) {
           return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         }
@@ -81,6 +121,12 @@
 
     var mapper = {
 
+        /**
+         *
+         *
+         * @param {string|object} ua 用户代理信息，可以是字符串或对象
+         * @param {array} arrays
+         */
         rgx : function (ua, arrays) {
 
             //var result = {},
@@ -142,6 +188,13 @@
             //return this;
         },
 
+        /**
+         * map对象中是否含有str字符串1
+         *
+         * @param {string} str
+         * @param {*} map
+         * @returns {string}
+         */
         str : function (str, map) {
 
             for (var i in map) {
@@ -931,6 +984,15 @@
     var Engine = Browser;
     var OS = Browser;
     */
+
+
+    /**
+     * 基于js的用户代理字符串解析器
+     *
+     * @param {string|object} uastring
+     * @param {object|undefined} extensions
+     * @returns {object}
+     */
     var UAParser = function (uastring, extensions) {
 
         if (typeof uastring === 'object') {
@@ -950,32 +1012,67 @@
         //var engine = new Engine();
         //var os = new OS();
 
+        /**
+         * 获取浏览器信息：name、major、version
+         *
+         * @returns {object}
+         */
         this.getBrowser = function () {
             var browser = { name: undefined, version: undefined };
             mapper.rgx.call(browser, ua, rgxmap.browser);
             browser.major = util.major(browser.version); // deprecated
             return browser;
         };
+
+        /**
+         * 获取CPU信息：architecture 
+         *
+         * @returns {object}
+         */
         this.getCPU = function () {
             var cpu = { architecture: undefined };
             mapper.rgx.call(cpu, ua, rgxmap.cpu);
             return cpu;
         };
+
+        /**
+         * 获取设备信息：vendor、model、type 
+         *
+         * @returns {object}
+         */
         this.getDevice = function () {
             var device = { vendor: undefined, model: undefined, type: undefined };
             mapper.rgx.call(device, ua, rgxmap.device);
             return device;
         };
+
+        /**
+         * 获取浏览器引擎信息：name、version 
+         *
+         * @returns {object}
+         */
         this.getEngine = function () {
             var engine = { name: undefined, version: undefined };
             mapper.rgx.call(engine, ua, rgxmap.engine);
             return engine;
         };
+
+        /**
+         * 获取系统信息：name、version
+         *
+         * @returns {object}
+         */
         this.getOS = function () {
             var os = { name: undefined, version: undefined };
             mapper.rgx.call(os, ua, rgxmap.os);
             return os;
         };
+
+        /**
+         * 获取全部结果：ua、browser、engine、os、device、cpu
+         *
+         * @returns {object}
+         */
         this.getResult = function () {
             return {
                 ua      : this.getUA(),
@@ -986,9 +1083,23 @@
                 cpu     : this.getCPU()
             };
         };
+
+        /**
+         * 获取用户代理信息：ua
+         *
+         * @returns {object}
+         */
         this.getUA = function () {
             return ua;
         };
+
+
+        /**
+         * 设置用户代理信息
+         *
+         * @param {string} uastring
+         * @returns {object}
+         */
         this.setUA = function (uastring) {
             ua = uastring;
             //browser = new Browser();

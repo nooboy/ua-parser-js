@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src='./ua-parser.js'></script>
+    <script>
+        const ua = new UAParser('');
+        console.log('---ua: ', ua);
+        console.log('===Browser: ', ua.getBrowser());
+        console.log('===CPU: ', ua.getCPU());
+        console.log('===Device: ', ua.getDevice());
+        console.log('===Engine: ', ua.getEngine());
+        console.log('===OS: ', ua.getOS());
+        console.log('===Result: ', ua.getResult());
+        console.log('===UA: ', ua.getUA());
+
+    </script>
+</body>
+</html>
